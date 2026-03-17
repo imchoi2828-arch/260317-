@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BOOK FOREST | 도서 상세</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body class="detail-page-body">
+  <div class="utility-bar">
+    <div class="container utility-inner">
+      <div class="utility-left">
+        <a href="./index.html">메인으로</a>
+        <a href="#detailInfo">상품정보</a>
+        <a href="#detailReview">리뷰</a>
+      </div>
+      <div class="utility-right">
+        <a href="#">이벤트</a>
+        <a href="#">쿠폰존</a>
+        <a href="#">고객센터</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-main">
+      <div class="header-left">
+        <a href="./index.html" class="brand" aria-label="메인페이지로 이동">
+          <span class="brand-mark">
+            <span></span>
+            <span></span>
+          </span>
+          <span class="brand-text">BOOK FOREST</span>
+        </a>
+      </div>
+
+      <div class="header-center">
+        <div class="search-box detail-search-box">
+          <input type="text" id="detailSearchInput" placeholder="도서명으로 다시 검색해보세요" />
+          <button id="detailSearchBtn">검색</button>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <a href="./index.html" class="icon-btn">메인 홈</a>
+        <a href="#detailReview" class="icon-btn">리뷰 보기</a>
+      </div>
+    </div>
+
+    <nav class="gnb detail-gnb">
+      <div class="container gnb-inner">
+        <div class="gnb-left detail-top-links">
+          <a href="./index.html" class="gnb-link active">BOOK FOREST</a>
+          <a href="#detailIntro" class="gnb-link">책소개</a>
+          <a href="#detailAuthor" class="gnb-link">작가정보</a>
+          <a href="#detailInfo" class="gnb-link">상품정보</a>
+          <a href="#detailReview" class="gnb-link">리뷰</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="detail-main">
+    <section class="detail-breadcrumb-wrap">
+      <div class="container">
+        <div class="detail-breadcrumb" id="detailBreadcrumb">홈 &gt; 도서 상세</div>
+      </div>
+    </section>
+
+    <section class="detail-hero-section">
+      <div class="container detail-hero-grid" id="detailHero">
+        <div class="detail-cover-panel skeleton-box"></div>
+        <div class="detail-summary-panel skeleton-box"></div>
+        <aside class="detail-buy-panel skeleton-box"></aside>
+      </div>
+    </section>
+
+    <section class="detail-tabbar-wrap">
+      <div class="container">
+        <div class="detail-tabbar">
+          <a href="#detailIntro" class="detail-tab active">책 소개</a>
+          <a href="#detailAuthor" class="detail-tab">작가 정보</a>
+          <a href="#detailIndex" class="detail-tab">목차</a>
+          <a href="#detailInfo" class="detail-tab">기본 정보</a>
+          <a href="#detailReview" class="detail-tab">리뷰</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail-section detail-banner-section" id="detailIntroBanner">
+      <div class="container" id="detailIntroBannerInner"></div>
+    </section>
+
+    <section class="detail-section" id="detailIntro">
+      <div class="container detail-content-box">
+        <div class="detail-section-head">
+          <p class="section-kicker">INTRODUCTION</p>
+          <h2>책 소개</h2>
+        </div>
+        <div class="detail-richtext" id="detailIntroText"></div>
+      </div>
+    </section>
+
+    <section class="detail-section" id="detailAuthor">
+      <div class="container detail-content-box">
+        <div class="detail-section-head">
+          <p class="section-kicker">AUTHOR</p>
+          <h2>작가 정보</h2>
+        </div>
+        <div class="detail-richtext" id="detailAuthorText"></div>
+      </div>
+    </section>
+
+    <section class="detail-section" id="detailIndex">
+      <div class="container detail-content-box">
+        <div class="detail-section-head">
+          <p class="section-kicker">CONTENTS</p>
+          <h2>목차</h2>
+        </div>
+        <div class="detail-index-list" id="detailIndexList"></div>
+      </div>
+    </section>
+
+    <section class="detail-section" id="detailInfo">
+      <div class="container detail-content-box">
+        <div class="detail-section-head">
+          <p class="section-kicker">BOOK INFO</p>
+          <h2>기본 정보</h2>
+        </div>
+        <div class="detail-info-grid" id="detailInfoGrid"></div>
+      </div>
+    </section>
+
+    <section class="detail-section detail-related-section" id="detailRelated">
+      <div class="container detail-content-box">
+        <div class="detail-section-head">
+          <p class="section-kicker">RELATED BOOKS</p>
+          <h2>함께 보면 좋은 책</h2>
+        </div>
+        <div class="book-grid" id="relatedBooksList"></div>
+      </div>
+    </section>
+
+    <section class="detail-section" id="detailReview">
+      <div class="container detail-content-box">
+        <div class="detail-section-head detail-review-head">
+          <div>
+            <p class="section-kicker">REVIEW</p>
+            <h2>독자 리뷰</h2>
+          </div>
+          <div class="detail-review-score" id="detailReviewScore"></div>
+        </div>
+        <div class="detail-review-list" id="detailReviewList"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-top">
+      <a href="./index.html">메인으로</a>
+      <a href="#detailIntro">책소개</a>
+      <a href="#detailInfo">상품정보</a>
+      <a href="#detailReview">리뷰</a>
+      <a href="#">고객센터</a>
+    </div>
+
+    <div class="container footer-bottom footer-real">
+      <div class="footer-info">
+        <strong>(주)북포레스트</strong>
+        <p>도서 상세 페이지 연습용 클론 화면입니다.</p>
+        <p>메인 페이지에서 클릭한 도서 정보를 기준으로 상세 페이지를 구성합니다.</p>
+      </div>
+      <div class="footer-cs">
+        <strong>고객센터</strong>
+        <p class="cs-number">1544-1234</p>
+        <p>평일 09:00 ~ 18:00</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./js/main.js"></script>
+  <script src="./js/detail.js"></script>
+</body>
+</html>
