@@ -1613,10 +1613,16 @@ img {
 .detail-visual-book {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
-.detail-visual-book img {
-  width: 270px;
+.detail-visual-book-image {
+  width: 240px;
+  max-width: 100%;
+  max-height: 360px;
+  object-fit: contain;
+  background: #fff;
+  padding: 10px;
   border-radius: 18px;
   box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
 }

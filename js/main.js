@@ -42,12 +42,94 @@ function formatPrice(price) {
 
 function getFallbackCover(title) {
   const encoded = encodeURIComponent(title || "BOOK");
-  return `https://placehold.co/300x420/ececec/666666?text=${encoded}`;
+  return `https://placehold.co/600x860/ececec/666666?text=${encoded}`;
 }
 
-function safeThumbnail(url, title) {
-  if (url && url.trim() !== "") return url;
-  return getFallbackCover(title);
+function parseBookIsbns(book) {
+  const raw = String(book?.isbn || "").trim();
+  if (!raw) return [];
+
+  const tokens = raw
+    .split(/\s+/)
+    .map(item => item.replace(/[^0-9Xx]/g, ""))
+    .filter(Boolean);
+
+  return [...new Set(tokens)].sort((a, b) => b.length - a.length);
+}
+
+function upgradeKakaoThumbnail(url) {
+  if (!url || !url.trim()) return "";
+
+  return url
+    .replace(/\/R\d+x\d+/i, "/R600x0")
+    .replace(/\/C\d+x\d+/i, "/C600x0")
+    .replace(/\/W\d+x\d+/i, "/W600x0");
+}
+
+function getBookCoverSources(book) {
+  const title = book?.title || "BOOK";
+  const fallback = getFallbackCover(title);
+  const isbns = parseBookIsbns(book);
+  const candidates = [];
+
+  if (book?.thumbnail) {
+    candidates.push(upgradeKakaoThumbnail(book.thumbnail));
+  }
+
+  isbns.forEach(isbn => {
+    candidates.push(`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg?default=false`);
+    candidates.push(`https://books.google.com/books/content?vid=ISBN${isbn}&printsec=frontcover&img=1&zoom=3&source=gbs_api`);
+  });
+
+  if (book?.thumbnail) {
+    candidates.push(book.thumbnail);
+  }
+
+  candidates.push(fallback);
+
+  return [...new Set(candidates.filter(Boolean))];
+}
+
+function safeThumbnail(bookOrUrl, maybeTitle) {
+  if (typeof bookOrUrl === "object" && bookOrUrl !== null) {
+    return getBookCoverSources(bookOrUrl)[0] || getFallbackCover(bookOrUrl.title);
+  }
+
+  if (bookOrUrl && String(bookOrUrl).trim() !== "") return bookOrUrl;
+  return getFallbackCover(maybeTitle);
+}
+
+function createResponsiveImageAttrs(book) {
+  const sources = getBookCoverSources(book);
+  const primary = sources[0];
+  const backup = escapeAttr(JSON.stringify(sources.slice(1)));
+
+  return `src="${primary}" data-fallbacks='${backup}' loading="lazy" referrerpolicy="no-referrer"`;
+}
+
+function bindSmartImages(scope = document) {
+  const images = scope.querySelectorAll("img[data-fallbacks]");
+
+  images.forEach(img => {
+    if (img.dataset.imageBound === "true") return;
+    img.dataset.imageBound = "true";
+
+    img.addEventListener("error", () => {
+      let fallbacks = [];
+
+      try {
+        fallbacks = JSON.parse(img.dataset.fallbacks || "[]");
+      } catch (error) {
+        fallbacks = [];
+      }
+
+      if (!fallbacks.length) return;
+
+      const nextSrc = fallbacks.shift();
+      img.dataset.fallbacks = JSON.stringify(fallbacks);
+      img.src = nextSrc;
+    });
+  });
 }
 
 function escapeAttr(value) {
@@ -67,10 +149,10 @@ function sanitizeBooks(books) {
 
   return books.filter(book => {
     const hasTitle = book.title && book.title.trim() !== "";
-    const hasThumbnail = book.thumbnail && book.thumbnail.trim() !== "";
+    const hasImageSource = (book.thumbnail && book.thumbnail.trim() !== "") || parseBookIsbns(book).length > 0;
     const validPrice = Number(book.sale_price || book.price) > 0;
 
-    return hasTitle && hasThumbnail && validPrice;
+    return hasTitle && hasImageSource && validPrice;
   });
 }
 
@@ -97,7 +179,7 @@ function createBookCard(book, index = 0, showRank = false) {
     <article class="book-card" tabindex="0" role="link" aria-label="${escapeAttr(book.title || "도서 상세 보기")}" data-book='${bookJson}'>
       ${rankHTML}
       <div class="book-thumb">
-        <img src="${safeThumbnail(book.thumbnail, book.title)}" alt="${escapeAttr(book.title || "도서 이미지")}" />
+        <img ${createResponsiveImageAttrs(book)} alt="${escapeAttr(book.title || "도서 이미지")}" />
       </div>
       <div class="book-meta">
         <h3 class="book-title">${book.title || "제목 없음"}</h3>
@@ -148,6 +230,7 @@ function renderBooks(selector, books, options = {}) {
     .join("");
 
   bindBookCardEvents(target);
+  bindSmartImages(target);
 }
 
 function renderStories(selector, items) {

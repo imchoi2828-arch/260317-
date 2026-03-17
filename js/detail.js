@@ -88,7 +88,7 @@ function renderDetailHero(book) {
     <div class="detail-cover-panel">
       <div class="detail-cover-sticky">
         <div class="detail-cover-frame">
-          <img src="${safeThumbnail(book.thumbnail, title)}" alt="${escapeHtml(title)}" class="detail-cover-image" />
+          <img ${createResponsiveImageAttrs(book)} alt="${escapeHtml(title)}" class="detail-cover-image" />
         </div>
       </div>
     </div>
@@ -165,7 +165,7 @@ function renderDetailSections(book) {
           <p>${escapeHtml(book.contents || "마음을 오래 붙잡는 문장을 가진 책을 위한 상세 소개 영역입니다.")}</p>
         </div>
         <div class="detail-visual-book">
-          <img src="${safeThumbnail(book.thumbnail, title)}" alt="${escapeHtml(title)}" />
+          <img ${createResponsiveImageAttrs(book)} alt="${escapeHtml(title)}" class="detail-visual-book-image" />
         </div>
       </div>
     `;
@@ -270,6 +270,7 @@ async function initDetailPage() {
 
   renderDetailHero(book);
   renderDetailSections(book);
+  bindSmartImages(document);
   await loadRelatedBooks(book);
 
   const searchBtn = document.querySelector("#detailSearchBtn");
